@@ -1,0 +1,19 @@
+{
+  "name": "stylelint-plugin-prefer-utility",
+  "version": "1.0.0",
+  "description": "A stylelint plugin to warn you when creating classes with only 1-2 properties that could be dealt with via utility classes",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rhumaric/stylelint-plugin-prefer-utility.git"
+  },
+  "author": "Romaric Pascal <hello@romaricpascal.is>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rhumaric/stylelint-plugin-prefer-utility/issues"
+  },
+  "homepage": "https://github.com/rhumaric/stylelint-plugin-prefer-utility#readme"
+}
