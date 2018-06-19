@@ -1,3 +1,1 @@
-module.exports = [
-  "./prefer-utility"
-].map(require);
+module.exports = ["./prefer-utility"].map(require);

@@ -1,0 +1,19 @@
+{
+  "extends": [
+    "stylelint",
+    "plugin:prettier/recommended"
+  ],
+  "rules": {
+    "strict": 0
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/__tests__/**/*"
+      ],
+      "globals": {
+        "testRule": true
+      }
+    }
+  ]
+}

@@ -2,14 +2,14 @@ const stylelint = require("stylelint");
 
 const ruleName = "prefer-utility/prefer-utility";
 
-module.exports = function () {
-  return function (root, result) {
+module.exports = function() {
+  return function(root, result) {
     // Walk
-    root.walkDecls(function (decl) {
+    root.walkDecls(function(decl) {
       // Warn
       stylelint.utils.report({
-        ruleName: ruleName,
-        result: result,
+        ruleName,
+        result,
         node: decl,
         line: decl.source.start.line,
         column: decl.source.start.column,
