@@ -1,64 +1,59 @@
-"use strict";
+// Jest setup from stylelint-order
+// had trouble making the one from
+// jest-preset-stylelint or stylelint work :'(
+// https://github.com/hudochenkov/stylelint-order/blob/f9ab4b2/jest-setup.js
 
-const _ = require("lodash");
-const basicChecks = require("stylelint").basicChecks;
-// const less = require("postcss-less");
-const stylelint = require("stylelint").lint;
+const _ = require('lodash');
+const stylelint = require('stylelint');
 
 global.testRule = (rule, schema) => {
   expect.extend({
     toHaveMessage(testCase) {
       if (testCase.message === undefined) {
         return {
-          message: () =>
-            'Expected "reject" test case to have a "message" property',
-          pass: false
+          message: () => 'Expected "reject" test case to have a "message" property',
+          pass: false,
         };
       }
 
       return {
-        pass: true
+        pass: true,
       };
-    }
+    },
   });
 
   describe(schema.ruleName, () => {
     const stylelintConfig = {
+      plugins: ['./'],
       rules: {
-        [schema.ruleName]: schema.config
-      }
+        [schema.ruleName]: schema.config,
+      },
     };
 
-    let passingTestCases = schema.accept || [];
-    if (!schema.skipBasicChecks) {
-      passingTestCases = passingTestCases.concat(basicChecks);
-    }
-
-    if (passingTestCases && passingTestCases.length) {
-      describe("accept", () => {
-        passingTestCases.forEach(testCase => {
+    if (schema.accept && schema.accept.length) {
+      describe('accept', () => {
+        schema.accept.forEach(testCase => {
           const spec = testCase.only ? it.only : it;
-          describe(JSON.stringify(schema.config, replacer), () => {
-            describe(JSON.stringify(testCase.code), () => {
-              spec(testCase.description || "no description", () => {
-                const options = {
-                  code: testCase.code,
-                  config: stylelintConfig,
-                  syntax: schema.syntax
-                };
-                return stylelint(options).then(output => {
-                  expect(output.results[0].warnings).toEqual([]);
-                  expect(output.results[0].parseErrors).toEqual([]);
-                  if (!schema.fix) return;
 
-                  // Check the fix
-                  return stylelint(Object.assign({ fix: true }, options)).then(
-                    output => {
-                      const fixedCode = getOutputCss(output);
-                      expect(fixedCode).toBe(testCase.code);
-                    }
-                  );
-                });
+          spec(testCase.description || testCase.code || 'no description', () => {
+            const options = {
+              code: testCase.code,
+              config: stylelintConfig,
+              syntax: schema.syntax,
+            };
+
+            return stylelint.lint(options).then(output => {
+              expect(output.results[0].warnings).toEqual([]);
+
+              if (!schema.fix) {
+                return;
+              }
+
+              // Check the fix
+              return stylelint.lint(Object.assign({ fix: true }, options)).then(output2 => {
+                const fixedCode = getOutputCss(output2);
+
+                expect(fixedCode).toBe(testCase.code);
               });
             });
           });
@@ -67,50 +62,51 @@ global.testRule = (rule, schema) => {
     }
 
     if (schema.reject && schema.reject.length) {
-      describe("reject", () => {
+      describe('reject', () => {
         schema.reject.forEach(testCase => {
           const spec = testCase.only ? it.only : it;
-          describe(JSON.stringify(schema.config, replacer), () => {
-            describe(JSON.stringify(testCase.code), () => {
-              spec(testCase.description || "no description", () => {
-                const options = {
-                  code: testCase.code,
-                  config: stylelintConfig,
-                  syntax: schema.syntax
-                };
-                return stylelint(options).then(output => {
-                  const warning = output.results[0].warnings[0];
 
-                  expect(output.results[0].parseErrors).toEqual([]);
-                  expect(testCase).toHaveMessage();
+          spec(testCase.description || testCase.code || 'no description', () => {
+            const options = {
+              code: testCase.code,
+              config: stylelintConfig,
+              syntax: schema.syntax,
+            };
 
-                  if (testCase.message !== undefined) {
-                    expect(_.get(warning, "text")).toBe(testCase.message);
-                  }
-                  if (testCase.line !== undefined) {
-                    expect(_.get(warning, "line")).toBe(testCase.line);
-                  }
-                  if (testCase.column !== undefined) {
-                    expect(_.get(warning, "column")).toBe(testCase.column);
-                  }
+            return stylelint.lint(options).then(output => {
+              const { warnings } = output.results[0];
+              const warning = warnings[0];
 
-                  if (!schema.fix) return;
+              expect(warnings.length).toBeGreaterThanOrEqual(1);
+              // expect(testCase).toHaveMessage();
 
-                  if (!testCase.fixed) {
-                    throw new Error(
-                      "If using { fix: true } in test schema, all reject cases must have { fixed: .. }"
-                    );
-                  }
+              if (testCase.message !== undefined) {
+                expect(_.get(warning, 'text')).toBe(testCase.message);
+              }
 
-                  // Check the fix
-                  return stylelint(Object.assign({ fix: true }, options)).then(
-                    output => {
-                      const fixedCode = getOutputCss(output);
-                      expect(fixedCode).toBe(testCase.fixed);
-                      expect(fixedCode).not.toBe(testCase.code);
-                    }
-                  );
-                });
+              if (testCase.line !== undefined) {
+                expect(_.get(warning, 'line')).toBe(testCase.line);
+              }
+
+              if (testCase.column !== undefined) {
+                expect(_.get(warning, 'column')).toBe(testCase.column);
+              }
+
+              if (!schema.fix) {
+                return;
+              }
+
+              if (!testCase.fixed) {
+                throw new Error(
+                  'If using { fix: true } in test schema, all reject cases must have { fixed: .. }'
+                );
+              }
+
+              // Check the fix
+              return stylelint.lint(Object.assign({ fix: true }, options)).then(output2 => {
+                const fixedCode = getOutputCss(output2);
+
+                expect(fixedCode).toBe(testCase.fixed);
               });
             });
           });
@@ -123,13 +119,42 @@ global.testRule = (rule, schema) => {
 function getOutputCss(output) {
   const result = output.results[0]._postcssResult;
   const css = result.root.toString(result.opts.syntax);
-  // if (result.opts.syntax === less) {
-  //   // Less needs us to manually strip whitespace at the end of single-line comments ¯\_(ツ)_/¯
-  //   return css.replace(/(\n?\s*\/\/.*?)[ \t]*(\r?\n)/g, "$1$2");
-  // }
+
   return css;
 }
 
-function replacer(key, value) {
-  return value instanceof RegExp ? `[RegExp] ${value.toString()}` : value;
-}
+global.testConfig = input => {
+  let testFn;
+
+  if (input.only) {
+    testFn = test.only;
+  } else if (input.skip) {
+    testFn = test.skip;
+  } else {
+    testFn = test;
+  }
+
+  testFn(input.description, () => {
+    const config = {
+      plugins: ['./'],
+      rules: {
+        [input.ruleName]: input.config,
+      },
+    };
+
+    return stylelint
+      .lint({
+        code: '',
+        config,
+      })
+      .then(function (data) {
+        const { invalidOptionWarnings } = data.results[0];
+
+        if (input.valid) {
+          expect(invalidOptionWarnings.length).toBe(0);
+        } else {
+          expect(invalidOptionWarnings[0].text).toBe(input.message);
+        }
+      });
+  });
+};
