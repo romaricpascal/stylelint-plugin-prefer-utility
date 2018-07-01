@@ -1,11 +1,11 @@
 const stylelint = require("stylelint");
-const { isFinite } = require('lodash');
+const { isString, isRegExp, isFunction } = require("lodash");
 const ruleName = "prefer-utility/prefer-utility";
 
 function countDecls(rule) {
   let count = 0;
-  rule.walkDecls(function () {
-    count++
+  rule.walkDecls(function() {
+    count++;
   });
   return count;
 }
@@ -18,15 +18,39 @@ function asThreshold(primaryOption) {
   return 1;
 }
 
-module.exports = function (primaryOption, secondaryOptions, context) {
+function getIgnoreRule(ignoreRules) {
+  if (isString(ignoreRules)) {
+    return function(rule) {
+      return rule.selector.indexOf(ignoreRules) !== -1;
+    };
+  }
+  if (isRegExp(ignoreRules)) {
+    return function(rule) {
+      return ignoreRules.test(rule.selector);
+    };
+  }
+  if (isFunction(ignoreRules)) {
+    return function(rule) {
+      return ignoreRules(rule);
+    };
+  }
+
+  // Default return a noop
+  return function() {};
+}
+
+module.exports = function(primaryOption, secondaryOptions, context) {
+  secondaryOptions = secondaryOptions || {};
   context = context || {};
 
   const threshold = asThreshold(primaryOption);
+  const ignoreRule = getIgnoreRule(secondaryOptions.ignoreRules);
 
-  return function (root, result) {
+  return function(root, result) {
     // Walk
-    root.walkRules(function (rule) {
+    root.walkRules(function(rule) {
       const count = countDecls(rule);
+      if (ignoreRule(rule)) return;
       if (!count || count > threshold) return;
       // Warn
       stylelint.utils.report({
