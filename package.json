@@ -4,7 +4,7 @@
   "description": "A stylelint plugin to warn you when creating classes with only 1-2 properties that could be dealt with via utility classes",
   "main": "index.js",
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest",
     "precommit": "lint-staged",
     "lint:js": "eslint . --cache"
   },

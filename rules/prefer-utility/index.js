@@ -2,17 +2,27 @@ const stylelint = require("stylelint");
 
 const ruleName = "prefer-utility/prefer-utility";
 
-module.exports = function() {
-  return function(root, result) {
+function countDecls(rule) {
+  let count = 0;
+  rule.walkDecls(function () {
+    count++
+  });
+  return count;
+}
+
+module.exports = function () {
+  return function (root, result) {
     // Walk
-    root.walkDecls(function(decl) {
+    root.walkRules(function (rule) {
+      const count = countDecls(rule);
+      if (!count || count > 1) return;
       // Warn
       stylelint.utils.report({
         ruleName,
         result,
-        node: decl,
-        line: decl.source.start.line,
-        column: decl.source.start.column,
+        node: rule,
+        line: rule.source.start.line,
+        column: rule.source.start.column,
         message: ""
       });
     });
