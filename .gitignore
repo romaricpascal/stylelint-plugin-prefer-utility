@@ -71,3 +71,11 @@ typings/
 
 # Serverless directories
 .serverless
+
+# Jest coverage
+.coverage
+
+# lock files
+yarn.lock
+package-lock.json
+shrinkwrap.yaml
