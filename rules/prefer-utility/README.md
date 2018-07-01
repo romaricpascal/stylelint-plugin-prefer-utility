@@ -12,7 +12,7 @@ Warns if a rule has so few declarations that you might be prefer using a utility
 
 The number of declarations above which you prefer *not* using a utility class. Possible values:
 
- - [TBD] any positive integer value
+ - any positive integer value
  - `true` (equivalent to `1`)
 
 ## Secondary options

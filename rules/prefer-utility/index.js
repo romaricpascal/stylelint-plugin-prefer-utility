@@ -1,5 +1,5 @@
 const stylelint = require("stylelint");
-
+const { isFinite } = require('lodash');
 const ruleName = "prefer-utility/prefer-utility";
 
 function countDecls(rule) {
@@ -10,12 +10,24 @@ function countDecls(rule) {
   return count;
 }
 
-module.exports = function () {
+function asThreshold(primaryOption) {
+  if (primaryOption >= 0) {
+    return primaryOption;
+  }
+
+  return 1;
+}
+
+module.exports = function (primaryOption, secondaryOptions, context) {
+  context = context || {};
+
+  const threshold = asThreshold(primaryOption);
+
   return function (root, result) {
     // Walk
     root.walkRules(function (rule) {
       const count = countDecls(rule);
-      if (!count || count > 1) return;
+      if (!count || count > threshold) return;
       // Warn
       stylelint.utils.report({
         ruleName,
