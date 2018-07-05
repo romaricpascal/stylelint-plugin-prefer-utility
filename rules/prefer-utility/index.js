@@ -39,9 +39,8 @@ function getIgnoreRule(ignoreRules) {
   return function() {};
 }
 
-module.exports = function(primaryOption, secondaryOptions, context) {
+module.exports = function(primaryOption, secondaryOptions) {
   secondaryOptions = secondaryOptions || {};
-  context = context || {};
 
   const threshold = asThreshold(primaryOption);
   const ignoreRule = getIgnoreRule(secondaryOptions.ignoreRules);
