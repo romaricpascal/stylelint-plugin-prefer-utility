@@ -42,6 +42,7 @@ Secondary options
 The `ignoreRules` option allows you to ignore specific CSS rules.
 `prefer-utility/prefer-utility` will ignore CSS rules if `ignoreRules` contains:
 
- - a `String` that the selector contains ,
+ - a `String` that the selector contains,
  - a `RegExp` that the selector matches against,
- - a `Function` that returns true when passed the PostCSS Rule about to be checked.
+ - a `Function` that returns true when passed the PostCSS Rule about to be checked,
+ - an `Array` listing any `String`,`RegExp` or `Function` that would lead to ignore the rule
