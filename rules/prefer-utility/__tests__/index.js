@@ -86,3 +86,30 @@ describe("Secondary option: `ignoreRules` ignores selectors making Function retu
     reject: [".a{prop: value;}", "#i{prop:value;}"].map(code => ({ code }))
   });
 });
+
+describe("Secondary option: `ignoreRules` ignoes selectors making any element of the Array match", function() {
+  testRule(rule, {
+    ruleName: rule.ruleName,
+    config: [
+      1,
+      {
+        ignoreRules: [
+          rule => {
+            return rule.selector.indexOf("b") !== -1;
+          },
+          "c",
+          /d/
+        ]
+      }
+    ],
+    accept: [
+      ".b{prop: value;}",
+      ".c{prop: value;}",
+      ".d{prop: value;}",
+      ".a{}",
+      ".a{/**/}",
+      ".a{prop: value; prop2: value2;}"
+    ].map(code => ({ code })),
+    reject: [".a{prop: value;}", "#i{prop:value;}"].map(code => ({ code }))
+  });
+});

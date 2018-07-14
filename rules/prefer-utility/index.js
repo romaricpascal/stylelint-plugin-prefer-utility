@@ -1,5 +1,5 @@
 const stylelint = require("stylelint");
-const { isString, isRegExp, isFunction } = require("lodash");
+const { isString, isRegExp, isFunction, isArray } = require("lodash");
 const ruleName = "prefer-utility/prefer-utility";
 
 function countDecls(rule) {
@@ -19,6 +19,13 @@ function asThreshold(primaryOption) {
 }
 
 function getIgnoreRule(ignoreRules) {
+  if (isArray(ignoreRules)) {
+    const tests = ignoreRules.map(getIgnoreRule);
+    return function(rule) {
+      return tests.some(test => test(rule));
+    };
+  }
+
   if (isString(ignoreRules)) {
     return function(rule) {
       return rule.selector.indexOf(ignoreRules) !== -1;
