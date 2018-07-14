@@ -3,6 +3,9 @@ stylelint-plugin-prefer-utility
 
 > A [Stylelint] plugin to let you know when you might be better off using a [utility class][utility-class]rather than creating a new one.
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Travis CI status](https://travis-ci.org/rhumaric/stylelint-plugin-prefer-utility.svg?branch=master)](https://travis-ci.org/rhumaric/stylelint-plugin-prefer-utility) [![Appveryor status](https://ci.appveyor.com/api/projects/status/iglqf8br12y2psrk/branch/master?svg=true)](https://ci.appveyor.com/project/rhumaric/stylelint-plugin-prefer-utility/branch/master)
+
+
 The plugin provides a `prefer-utility/prefer-utility` rule that compares the number of declarations in each ruleset with a [configurable threshold][primary-option].
 
 It warns you if that number is equal or below that threshold, so that you can avoid introducing a new rule for a so few properties.
