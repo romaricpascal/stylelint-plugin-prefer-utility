@@ -1,6 +1,40 @@
 const stylelint = require("stylelint");
-const { isString, isRegExp, isFunction, isArray } = require("lodash");
+const { isNumber, isString, isRegExp, isFunction, isArray } = require("lodash");
 const ruleName = "prefer-utility/prefer-utility";
+const messages = stylelint.utils.ruleMessages(ruleName, {
+  expected: (threshold, rule) =>
+    `${
+      rule.selector
+    } has less than ${threshold} declaration(s). You might want to consider using a utility class instead`
+});
+
+module.exports = function(primaryOption, secondaryOptions) {
+  secondaryOptions = secondaryOptions || {};
+
+  const threshold = asThreshold(primaryOption);
+  const ignoreRule = getIgnoreRule(secondaryOptions.ignoreRules);
+
+  return function(root, result) {
+    // Walk
+    root.walkRules(function(rule) {
+      const count = countDecls(rule);
+      if (ignoreRule(rule)) return;
+      if (!count || count > threshold) return;
+      // Warn
+      stylelint.utils.report({
+        ruleName,
+        result,
+        node: rule,
+        line: rule.source.start.line,
+        column: rule.source.start.column,
+        message: messages.expected(threshold, rule)
+      });
+    });
+  };
+};
+
+module.exports.ruleName = ruleName;
+module.exports.messages = messages;
 
 function countDecls(rule) {
   let count = 0;
@@ -11,7 +45,7 @@ function countDecls(rule) {
 }
 
 function asThreshold(primaryOption) {
-  if (primaryOption >= 0) {
+  if (isNumber(primaryOption) && primaryOption >= 0) {
     return primaryOption;
   }
 
@@ -45,29 +79,3 @@ function getIgnoreRule(ignoreRules) {
   // Default return a noop
   return function() {};
 }
-
-module.exports = function(primaryOption, secondaryOptions) {
-  secondaryOptions = secondaryOptions || {};
-
-  const threshold = asThreshold(primaryOption);
-  const ignoreRule = getIgnoreRule(secondaryOptions.ignoreRules);
-
-  return function(root, result) {
-    // Walk
-    root.walkRules(function(rule) {
-      const count = countDecls(rule);
-      if (ignoreRule(rule)) return;
-      if (!count || count > threshold) return;
-      // Warn
-      stylelint.utils.report({
-        ruleName,
-        result,
-        node: rule,
-        line: rule.source.start.line,
-        column: rule.source.start.column,
-        message: ""
-      });
-    });
-  };
-};
-module.exports.ruleName = ruleName;

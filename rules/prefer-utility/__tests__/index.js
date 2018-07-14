@@ -113,3 +113,16 @@ describe("Secondary option: `ignoreRules` ignoes selectors making any element of
     reject: [".a{prop: value;}", "#i{prop:value;}"].map(code => ({ code }))
   });
 });
+
+describe("Error message", function() {
+  testRule(rule, {
+    ruleName: rule.ruleName,
+    config: [true],
+    accept: [].map(code => ({ code })),
+    reject: [".a{prop: value;}"].map(code => ({
+      code,
+      message:
+        ".a has less than 1 declaration(s). You might want to consider using a utility class instead (prefer-utility/prefer-utility)"
+    }))
+  });
+});
