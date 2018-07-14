@@ -14,7 +14,7 @@ module.exports = {
   // ...
   rules: {
     // ...
-    'prefer-utility/prefer-utility': [1, {
+    "prefer-utility/prefer-utility": [1, {
       ignoreRules: function(rule) {
         // Replace with
         return false;

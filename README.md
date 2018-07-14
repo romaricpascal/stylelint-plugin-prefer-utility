@@ -37,8 +37,8 @@ It provides a [shareable config] you can extend to quickly add the rule to you c
 
 ```js
 {
-  extends: [
-    'stylelint-plugin-prefer-utility/config'
+  "extends": [
+    "stylelint-plugin-prefer-utility/config"
   ]
 }
 ```
@@ -47,11 +47,11 @@ You can then override the options for the [`prefer-utility/prefer-utility` rule]
 
 ```js
 {
-  extends: [
-    'stylelint-plugin-prefer-utility/config'
+  "extends": [
+    "stylelint-plugin-prefer-utility/config"
   ],
-  rules: [
-    'prefer-utility/prefer-utility': [
+  "rules": [
+    "prefer-utility/prefer-utility": [
       // If you prefer only creating new classes
       // for more than 2 declarations
       2, {
