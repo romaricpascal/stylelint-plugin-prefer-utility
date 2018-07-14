@@ -1,3 +1,8 @@
 jest*.js
 **/__tests__/**/*.js?(x)
 **/?(*.)+(spec|test).js?(x)
+.travis.yml
+appveyor.yml
+package-lock.json
+.gitignore
+.eslintrc
