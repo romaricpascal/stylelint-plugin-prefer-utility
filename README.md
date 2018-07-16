@@ -19,7 +19,7 @@ You'll probably want to avoid certain rules, too. Like your utility classes for 
 Getting started
 ---
 
-The package will soon be available on [NPM] and will be installed via:
+The package is available on [NPM] and can be installed via:
 
 ```sh
 npm install stylelint-plugin-prefer-utility
