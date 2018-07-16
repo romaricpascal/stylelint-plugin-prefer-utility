@@ -59,11 +59,11 @@ You can then override the options for the [`prefer-utility/prefer-utility` rule]
 
 > If you need it for creating your own `ignoreRules`, you can reuse the helper function used by the shareable config for testing if a selector is a single class or ID with:
 > ```js
->  targetsSingleClassOrId = require('stylelint-plugin-prefer-utility/lib/targetsSingleClassOrId')`
+>  targetsSingleClassOrId = require('stylelint-plugin-prefer-utility/lib/targetsSingleClassOrId')
 >  ```
 > or
 > ```js
->  import targetsSingleClassOrId from 'stylelint-plugin-prefer-utility/lib/targetsSingleClassOrId'`
+>  import targetsSingleClassOrId from 'stylelint-plugin-prefer-utility/lib/targetsSingleClassOrId'
 >  ```
 
 [Stylelint]: https://stylelint.io/
