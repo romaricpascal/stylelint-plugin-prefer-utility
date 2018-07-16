@@ -1,6 +1,6 @@
 {
   "name": "stylelint-plugin-prefer-utility",
-  "version": "1.0.0-0",
+  "version": "1.0.0-1",
   "description": "A Stylelint plugin to let you know when you might be better off using a utility class rather than creating a new one.",
   "keywords": [
     "stylelint-plugin",
