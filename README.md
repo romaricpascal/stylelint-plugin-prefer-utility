@@ -1,3 +1,5 @@
+> This repository is now [hosted on Gitlab](https://gitlab.com/romaricpascal/stylelint-plugin-prefer-utility). Please head there if you wish to contribute. Thanks 🙂
+
 stylelint-plugin-prefer-utility
 ===
 
